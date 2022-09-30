@@ -1,7 +1,7 @@
 using System;
 using SS.Template.Core;
 
-namespace SS.Template.Infrastructure
+namespace SS.Template
 {
     public sealed class SystemDateTime : IDateTime
     {

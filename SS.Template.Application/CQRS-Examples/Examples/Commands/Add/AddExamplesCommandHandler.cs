@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using SS.Data;
 using SS.Template.Application.Commands;
-using SS.Template.Core.Persistence;
 using SS.Template.Domain.Entities;
 
 namespace SS.Template.Application.Examples.Commands.Add

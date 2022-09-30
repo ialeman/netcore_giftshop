@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using SS.Template.Core;
 
-namespace SS.Template.Infrastructure
+namespace SS.Template
 {
     public sealed class SmtpEmailSender : IEmailSender
     {

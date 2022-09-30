@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace SS.Template.Core.Persistence
+namespace SS.Data
 {
     public static class RepositoryExtensions
     {
@@ -18,7 +18,7 @@ namespace SS.Template.Core.Persistence
         public static IQueryable<T> Query<T>(this IRepositoryBase repository)
             where T : class
         {
-            return repository.Query(default, default(IEnumerable<Expression<Func<T, object>>>));
+            return repository.Query(default(Expression<Func<T, bool>>), default(IEnumerable<Expression<Func<T, object>>>));
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace SS.Template.Core.Persistence
         public static IQueryable<T> Query<T>(this IRepositoryBase repository, params Expression<Func<T, object>>[] includes)
             where T : class
         {
-            return repository.Query(default, includes);
+            return repository.Query(default(Expression<Func<T, bool>>), includes);
         }
 
         /// <summary>
@@ -66,6 +66,40 @@ namespace SS.Template.Core.Persistence
             }
 
             return entities.Select(repository.Add);
+        }
+
+        /// <summary>
+        /// Returns the count of the given entity using the specified condition.
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <param name="repository">The <see cref="IRepository"/> instance.</param>
+        /// <param name="predicate">The predicate.</param>
+        public static int Count<T>(this IRepositoryBase repository, Expression<Func<T, bool>> predicate) where T : class
+        {
+            if (repository == null)
+            {
+                throw new ArgumentNullException(nameof(repository));
+            }
+
+            return repository.Query(predicate).Count();
+        }
+
+        /// <summary>
+        /// Returns the count of the given entity.
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <param name="repository">The <see cref="IRepository"/> instance.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// <paramref name="repository" /> is <c>null</c>
+        /// </exception>
+        public static int Count<T>(this IRepositoryBase repository) where T : class
+        {
+            if (repository == null)
+            {
+                throw new ArgumentNullException(nameof(repository));
+            }
+
+            return repository.Count(default(Expression<Func<T, bool>>));
         }
 
         /// <summary>
@@ -120,6 +154,49 @@ namespace SS.Template.Core.Persistence
             {
                 repository.Remove(entity);
             }
+        }
+
+        /// <summary>
+        /// Gets the first entity in the set ordering by the specified property.
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <param name="repository">The <see cref="IRepository"/> instance.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// <paramref name="repository" /> is <c>null</c>
+        /// </exception>
+        public static T First<T>(this IRepositoryBase repository) where T : class
+        {
+            if (repository == null)
+            {
+                throw new ArgumentNullException(nameof(repository));
+            }
+
+            return repository.Query<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the first entity in the set ordering by the specified property.
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <typeparam name="TProperty">The order property type.</typeparam>
+        /// <param name="repository">The <see cref="IRepository"/> instance.</param>
+        /// <param name="orderSelector">A function to extract a key from an element.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// <paramref name="repository" /> or <paramref name="orderSelector" /> is <c>null</c>
+        /// </exception>
+        public static T First<T, TProperty>(this IRepositoryBase repository, Expression<Func<T, TProperty>> orderSelector) where T : class
+        {
+            if (repository == null)
+            {
+                throw new ArgumentNullException(nameof(repository));
+            }
+
+            if (orderSelector == null)
+            {
+                throw new ArgumentNullException(nameof(orderSelector));
+            }
+
+            return repository.Query<T>().OrderBy(orderSelector).FirstOrDefault();
         }
     }
 }

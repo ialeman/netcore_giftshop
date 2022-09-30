@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SS.Data;
 using SS.Template.Application.Queries;
-using SS.Template.Core.Persistence;
 
 namespace SS.Template.Application.Infrastructure
 {
@@ -57,11 +57,10 @@ namespace SS.Template.Application.Infrastructure
         {
             Paginator.ValidatePaging(page, pageSize);
 
-            var count = await repository.CountAsync(countQuery, cancellationToken);
+            var count = await repository.CountAsync(countQuery);
 
-            var items = await repository.ListAsync(itemsQuery
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize), cancellationToken);
+            var items = await repository.ListAsync(
+                itemsQuery.Skip((page - 1) * pageSize).Take(pageSize));
 
             return PaginatedResult.From(items, count, page, pageSize);
         }

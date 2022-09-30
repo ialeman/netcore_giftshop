@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SS.Data;
 using SS.Template.Application.Queries;
-using SS.Template.Core.Persistence;
 
 namespace SS.Template.Application.Infrastructure
 {

@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SS.Template.Core.Persistence;
+using Microsoft.EntityFrameworkCore;
+using SS.Data;
 
 namespace SS.Template.Persistence
 {

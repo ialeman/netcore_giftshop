@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 using SS.Template.Core;
 
-namespace SS.Template.Infrastructure
+namespace SS.Template
 {
     public sealed class ImageResizer : IImageResizer
     {

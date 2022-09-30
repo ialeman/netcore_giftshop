@@ -2,7 +2,7 @@ using System;
 using AutoMapper;
 using SS.Template.Domain.Model;
 
-namespace SS.Template.Infrastructure
+namespace SS.Template
 {
     public static class AutoMapperConfig
     {

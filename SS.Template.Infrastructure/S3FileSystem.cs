@@ -7,7 +7,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using SS.Template.Core;
 
-namespace SS.Template.Infrastructure
+namespace SS.Template
 {
     public sealed class S3FileSystem : IFileSystem
     {

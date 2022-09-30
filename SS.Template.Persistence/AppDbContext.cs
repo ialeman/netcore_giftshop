@@ -6,16 +6,28 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SS.Template.Domain.Entities;
 using SS.Template.Domain.Model;
+using SS.Template.Model.Territories;
 
 namespace SS.Template.Persistence
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Example> Examples { get; set; }
 
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        #region Territories
+
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<Region> Regions { get; set; }
+
+        public DbSet<Subregion> Subregions { get; set; }
+
+        #endregion Territories
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

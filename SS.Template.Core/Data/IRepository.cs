@@ -1,7 +1,8 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SS.Template.Core.Persistence
+namespace SS.Data
 {
     public interface IRepository : IRepositoryBase
     {
@@ -22,6 +23,12 @@ namespace SS.Template.Core.Persistence
         T Remove<T>(T entity) where T : class;
 
         /// <summary>
+        /// Commits the changes to the data store.
+        /// </summary>
+        /// <returns>The number of objects written to the underlying database.</returns>
+        int SaveChanges();
+
+        /// <summary>
         /// Asynchronously saves all changes made in this context to the underlying database.
         /// </summary>
         /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task
@@ -32,7 +39,7 @@ namespace SS.Template.Core.Persistence
         /// state entries are created for many-to-many relationships and relationships
         /// where there is no foreign key property included in the entity class (often
         /// referred to as independent associations).</returns>
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Updates the specified entity.

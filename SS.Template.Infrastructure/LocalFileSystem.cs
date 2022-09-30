@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using SS.Template.Core;
 
-namespace SS.Template.Infrastructure
+namespace SS.Template
 {
     public sealed class LocalFileSystem : IFileSystem
     {

@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SS.Template.Core.Persistence;
+using SS.Data;
 
 namespace SS.Template.Persistence
 {
@@ -58,9 +58,14 @@ namespace SS.Template.Persistence
             return result.Entity;
         }
 
-        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public virtual int SaveChanges()
         {
-            return Context.SaveChangesAsync(cancellationToken);
+            return Context.SaveChanges();
+        }
+
+        public virtual Task<int> SaveChangesAsync(CancellationToken token = default(CancellationToken))
+        {
+            return Context.SaveChangesAsync(token);
         }
     }
 

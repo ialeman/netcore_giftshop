@@ -5,7 +5,7 @@ using System.Linq;
 using OfficeOpenXml;
 using SS.Template.Core;
 
-namespace SS.Template.Infrastructure
+namespace SS.Template
 {
     public sealed class ExcelReader : IExcelReader
     {

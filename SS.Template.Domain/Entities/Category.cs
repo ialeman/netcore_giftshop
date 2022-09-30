@@ -1,9 +1,11 @@
+using SS.Template.Model;
+
 namespace SS.Template.Domain.Entities
 {
-    public class Category
+    public class Category: EntityBase
     {
-        public int Id { get; set; }
-        public string CategoryName { get; set; }
-        
+        public string Name { get; set; }
+
+        public string Icon { get; set; }
     }
 }

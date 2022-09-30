@@ -1,9 +1,10 @@
 using System;
 using SS.Template.Domain.Model;
+using SS.Template.Model;
 
 namespace SS.Template.Domain.Entities
 {
-    public class Customer : Entity, IStatus<EnabledStatus>, IHaveDateCreated, IHaveDateUpdated
+    public class Customer : EntityBase, IStatus<EnabledStatus>, IHaveDateCreated, IHaveDateUpdated
     {
         public string Name { get; set; }
 

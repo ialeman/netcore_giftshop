@@ -24,16 +24,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using SS.Data;
+using SS.Template.Api.DependencyInjection;
 using SS.Template.Api.Filters;
 using SS.Template.Api.Identity;
 using SS.Template.Application.Commands;
 using SS.Template.Application.Examples;
 using SS.Template.Application.Infrastructure;
 using SS.Template.Core;
-using SS.Template.Core.Persistence;
-using SS.Template.Infrastructure;
-using SS.Template.Infrastructure.DependencyInjection;
 using SS.Template.Persistence;
+using SS.Template.Services;
 
 namespace SS.Template.Api
 {
@@ -41,15 +41,14 @@ namespace SS.Template.Api
     {
         private const string AssetsDirectory = "assets";
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        public IConfiguration Configuration { get; }
+        public IHostEnvironment Environment { get; }
+
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
             Configuration = configuration;
             Environment = environment;
         }
-
-        public IConfiguration Configuration { get; }
-
-        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -89,11 +88,14 @@ namespace SS.Template.Api
 
             services.AddHealthChecks();
 
+            
             AddIdentity(services);
             AddAuthentication(services, Configuration);
 
             AddMvcCore(services, applicationAssembly);
             AddAppServices(services, applicationAssembly);
+
+            services.AddAppServices(Configuration, Environment);
         }
 
         private static void AddAuthentication(IServiceCollection services, IConfiguration configuration)
@@ -265,7 +267,8 @@ namespace SS.Template.Api
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AppConnection"), SqlServerOptionsAction);
             });
-            services.AddScoped<AppDbContextInitializer>();
+
+            // services.AddScoped<AppDbContextInitializer>();
 
             // Persistence
             services.AddTransient<IRepository, EfRepository<AppDbContext>>();
@@ -274,7 +277,7 @@ namespace SS.Template.Api
 
             // Infrastructure
             services.AddSingleton<IDateTime>(new SystemDateTime(Configuration["TimeZone"]));
-            services.AddAutoMapper(AutoMapperConfig.Configure, applicationAssembly);
+            //services.AutoMapper(AutoMapperConfig.Configure, applicationAssembly);
 
             if (Environment.IsDevelopment())
             {
@@ -284,8 +287,8 @@ namespace SS.Template.Api
                     Directory.CreateDirectory(root);
                 }
                 services.AddSingleton<IFileSystem>(new LocalFileSystem(root));
-                services.AddSingleton<IUrlService>(new DomainUrlService(Configuration.GetValue<Uri>("AssetsDomain"), AssetsDirectory,
-                    Configuration.GetValue<Uri>("ClientDomain")));
+                // services.AddSingleton<IUrlService>(new DomainUrlService(Configuration.GetValue<Uri>("AssetsDomain"), AssetsDirectory,
+                   // Configuration.GetValue<Uri>("ClientDomain")));
                 // If SMTP configuration exists for development, use it
                 if (!RegisterSmtpSender(services, false))
                 {
@@ -295,17 +298,19 @@ namespace SS.Template.Api
             else
             {
                 RegisterSmtpSender(services, required: true);
-                services.AddSingleton<IUrlService>(new DomainUrlService(Configuration.GetValue<Uri>("AssetsDomain"), null,
-                    Configuration.GetValue<Uri>("ClientDomain")));
+                //services.AddSingleton<IUrlService>(new DomainUrlService(Configuration.GetValue<Uri>("AssetsDomain"), null,
+                //    Configuration.GetValue<Uri>("ClientDomain")));
+                //
             }
 
             // Services
-            services.AddServices(applicationAssembly);
+            //services.AddServices(applicationAssembly);
+
 
             // MediatR
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-            services.AddMediatR(applicationAssembly);
+            //services.AddMediatR(applicationAssembly);
 
             AddEditCommandValidators(services);
         }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.452
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SS.Template.Domain", "SS.Template.Domain\SS.Template.Domain.csproj", "{A968736C-D8B7-440A-8E5A-62D7924779D7}"
 EndProject
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentation", "1. Prese
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Infrastructure", "4. Infrastructure", "{88907EAD-C28B-4FCF-9395-3855D0A76054}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SS.Template.Infrastructure", "SS.Template.Infrastructure\SS.Template.Infrastructure.csproj", "{03B2357E-50A2-4EF3-972D-8CFDF3179132}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SS.Template.Services", "SS.Template.Infrastructure\SS.Template.Services.csproj", "{03B2357E-50A2-4EF3-972D-8CFDF3179132}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SS.Template.Api", "SS.Template.Api\SS.Template.Api.csproj", "{766D9F8C-6BB0-4298-87F2-83E7755BC5C9}"
 EndProject

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SS.Template.Domain.Entities;
 using SS.Template.Persistence;
+using SS.Template.Services;
 
 namespace SS.Template.Api.Controllers
 {
@@ -16,97 +17,93 @@ namespace SS.Template.Api.Controllers
     [AllowAnonymous]
     public class CategoriesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(AppDbContext context)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
-        // GET: api/Categories
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
-        {
-            return await _context.Categories.ToListAsync();
-        }
-
-        // GET: api/Categories/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
-        {
-            var category = await _context.Categories.FindAsync(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return category;
-        }
-
-        // PUT: api/Categories/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
-        {
-            if (id != category.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(category).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Categories
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<IActionResult> PostCategory(Category category)
         {
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            await _categoryService.AddCategoryAsync(category);
+            return Ok(category);
         }
 
-        // DELETE: api/Categories/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Category>> DeleteCategory(int id)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return category;
+            var values = await _categoryService.GetAll();
+            return Ok(values);
         }
 
-        private bool CategoryExists(int id)
+        [HttpPut] // ("{id}")
+        public async Task<IActionResult> PutCategory(Category category)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            await _categoryService.EditCategoryAsync(category);
+
+            //if (id != category.Id)
+            //{
+            //    return BadRequest();
+            //}
+
+           //  _context.Entry(category).State = EntityState.Modified;
+
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!CategoryExists(id))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
+
+            return Ok();
         }
+
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Category>> GetCategory(int id)
+        //{
+        //    var category = await _context.Categories.FindAsync(id);
+
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return category;
+        //}
+
+
+
+
+
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult<Category>> DeleteCategory(int id)
+        //{
+        //    var category = await _context.Categories.FindAsync(id);
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.Categories.Remove(category);
+        //    await _context.SaveChangesAsync();
+
+        //    return category;
+        //}
+
+        //private bool CategoryExists(int id)
+        //{
+        //    return _context.Categories.Any(e => e.Id == id);
+        //}
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SS.Template.Core;
 
-namespace SS.Template.Infrastructure
+namespace SS.Template
 {
     public sealed class DummyEmailSender : IEmailSender
     {

@@ -1,8 +1,9 @@
 using SS.Template.Domain.Model;
+using SS.Template.Model;
 
 namespace SS.Template.Domain.Entities
 {
-    public class Example : Entity, IStatus<EnabledStatus>
+    public class Example : EntityBase, IStatus<EnabledStatus>
     {
         public string Name { get; set; }
 

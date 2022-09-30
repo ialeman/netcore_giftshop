@@ -19,4 +19,8 @@
     <ProjectReference Include="..\SS.Template.Core\SS.Template.Core.csproj" />
     <ProjectReference Include="..\SS.Template.Domain\SS.Template.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CQRS-Examples\" />
+  </ItemGroup>
 </Project>

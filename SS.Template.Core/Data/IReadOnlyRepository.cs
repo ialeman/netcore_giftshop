@@ -1,4 +1,4 @@
-namespace SS.Template.Core.Persistence
+namespace SS.Data
 {
     public interface IReadOnlyRepository : IRepositoryBase
     {

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SS.Template.Core.Persistence;
+using SS.Data;
 
 namespace SS.Template.Persistence
 {
@@ -26,7 +26,7 @@ namespace SS.Template.Persistence
             return Context.Set<T>();
         }
 
-        public virtual IQueryable<T> Query<T>(Expression<Func<T, bool>> predicate, IEnumerable<Expression<Func<T, object>>> includes)
+        public virtual IQueryable<T> Query<T>(Expression<Func<T, bool>> condition, IEnumerable<Expression<Func<T, object>>> includes)
             where T : class
         {
             var query = (IQueryable<T>)Set<T>();
@@ -36,9 +36,9 @@ namespace SS.Template.Persistence
                 query = query.AsNoTracking();
             }
 
-            if (predicate != null)
+            if (condition != null)
             {
-                query = query.Where(predicate);
+                query = query.Where(condition);
             }
 
             return WithIncludes(query, includes);
@@ -70,37 +70,27 @@ namespace SS.Template.Persistence
 
         #region Async methods
 
-        public Task<T> FirstAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default)
+        public async Task<T> FirstAsync<T>(IQueryable<T> query)
         {
             if (query == null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
 
-            return query.FirstOrDefaultAsync(cancellationToken);
+            return await query.FirstOrDefaultAsync();
         }
 
-        public Task<T> SingleAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default)
+        public async Task<bool> AnyAsync<T>(IQueryable<T> query)
         {
             if (query == null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
 
-            return query.SingleOrDefaultAsync(cancellationToken);
+            return await query.AnyAsync();
         }
 
-        public Task<bool> AnyAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default)
-        {
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
-            return query.AnyAsync(cancellationToken);
-        }
-
-        public Task<bool> AllAsync<T>(IQueryable<T> query, Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        public async Task<bool> AllAsync<T>(IQueryable<T> query, Expression<Func<T, bool>> predicate)
         {
             if (query == null)
             {
@@ -112,10 +102,10 @@ namespace SS.Template.Persistence
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return query.AllAsync(predicate, cancellationToken);
+            return await query.AllAsync(predicate);
         }
 
-        public Task ForEachAsync<T>(IQueryable<T> query, Action<T> action, CancellationToken cancellationToken = default)
+        public async Task ForEachAsync<T>(IQueryable<T> query, Action<T> action)
         {
             if (query == null)
             {
@@ -127,27 +117,39 @@ namespace SS.Template.Persistence
                 throw new ArgumentNullException(nameof(action));
             }
 
-            return query.ForEachAsync(action, cancellationToken);
+            await query.ForEachAsync(action);
         }
 
-        public Task<int> CountAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default)
+        public async Task<int> CountAsync<T>(IQueryable<T> query)
         {
             if (query == null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
 
-            return query.CountAsync(cancellationToken);
+            return await query.CountAsync();
         }
 
-        public Task<List<T>> ListAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default)
+        [Obsolete("Wrongly named. Use ListAsync instead.")]
+        public async Task<List<T>> ToListAsync<T>(IQueryable<T> query, IEnumerable<Expression<Func<T, object>>> includes)
+            where T : class
         {
             if (query == null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
 
-            return query.ToListAsync(cancellationToken);
+            return await WithIncludes(query, includes).ToListAsync();
+        }
+
+        public async Task<List<T>> ListAsync<T>(IQueryable<T> query)
+        {
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            return await query.ToListAsync();
         }
 
         private static IQueryable<T> WithIncludes<T>(IQueryable<T> query, IEnumerable<Expression<Func<T, object>>> includes)
@@ -162,5 +164,13 @@ namespace SS.Template.Persistence
         }
 
         #endregion Async methods
+
+        /*
+        public IEnumerable<TEntity> SqlQuery<TEntity>(string sql, params object[] parameters)
+        {
+            throw new NotImplementedException();
+        }
+        */
+
     }
 }
